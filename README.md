@@ -19,7 +19,7 @@
 ```bash
    dotnet restore
 ```
-4. Для подключения к БД изменить файл проекта appsettings.json поле Connection класса WagonServiceImplSettings:
+4. Для подключения к БД изменить файл проекта Server (WagonService.Server/Server) appsettings.json поле Connection класса WagonServiceImplSettings:
 ```bash
 "WagonServiceImplSettings": {
   "Connection": "Host=localhost;Port=5432;Username=Admin;Password=Admin;Database=wagon"
