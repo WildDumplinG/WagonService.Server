@@ -26,4 +26,4 @@
 },
 ```
 # Запуск сервера
-dotnet run
+dotnet run --project Server
