@@ -27,3 +27,6 @@
 ```
 # Запуск сервера
 dotnet run --project Server
+
+Релизы моно скачать по пути
+[https://github.com/WildDumplinG/WagonService.Server/releases]
