@@ -9,7 +9,7 @@
 Для установки проекта выполните следующие шаги:
 1. Клонируйте репозиторий:
 ```
-   git clone [https://github.com/ваш_пользователь/WagonService.Server.git](https://github.com/WildDumplinG/WagonService.Server)
+   git clone [https://github.com/WildDumplinG/WagonService.Server.git](https://github.com/WildDumplinG/WagonService.Server)
 ```
 2. Перейдите в каталог скачанного проекта
 ```bash
