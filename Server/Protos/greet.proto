@@ -2,7 +2,7 @@ syntax = "proto3";
 
 option csharp_namespace = "WagonService.Server";
 
-    message WagonRequest {
+   message WagonRequest {
        string start_time = 1;
        string end_time = 2;
    }

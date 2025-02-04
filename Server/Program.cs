@@ -1,5 +1,5 @@
+using Server.Services.Settings;
 using WagonService.Server.Services;
-using static WagonService.Server.Services.WagonServiceImpl;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,10 +9,22 @@ builder.Services.Configure<WagonServiceImplSettings>(builder.Configuration.GetSe
 
 #endregion
 
+builder.WebHost.UseKestrel();
+
 // Add services to the container.
 builder.Services.AddGrpc();
 
 var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
+else
+{
+    app.UseExceptionHandler("/Error");
+    app.UseHsts();
+}
 
 // Configure the HTTP request pipeline.
 app.MapGrpcService<WagonServiceImpl>();

@@ -4,25 +4,29 @@ using Npgsql;
 using Dapper;
 using System.Data;
 using DBModels = WagonService.Server.DataBase.Models;
+using Server.Services.Settings;
 
 namespace WagonService.Server.Services
 {
-    public class WagonServiceImpl(IOptions<WagonServiceImpl.WagonServiceImplSettings> options) : WagonService.WagonServiceBase
+    public class WagonServiceImpl(IOptions<WagonServiceImplSettings> options) : WagonService.WagonServiceBase
     {
         #region Settings
 
         private readonly IOptions<WagonServiceImplSettings> _settings = options;
 
         #endregion
-        public class WagonServiceImplSettings
-        { 
-            public string Connection { get; set; } = "";
-        }
 
         public override async Task<WagonResponse> GetWagons(WagonRequest request, ServerCallContext context)
         {
-            var startTime = DateTime.Parse(request.StartTime);
-            var endTime = DateTime.Parse(request.EndTime);
+            if (!IsValidTimeFormat(request.StartTime, out var startTime) || !IsValidTimeFormat(request.EndTime, out var endTime))
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, "Неверный формат времени."));
+            }
+
+            if (startTime >= endTime)
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, "Start time должно быть меньше End time."));
+            }
 
             using (IDbConnection dbConnection = new NpgsqlConnection(_settings.Value.Connection))
             {
@@ -38,9 +42,9 @@ namespace WagonService.Server.Services
                     LEFT JOIN 
                         ""EpcEvent"" ee ON e.""Id"" = ee.""IdEpc"" AND ee.""Type"" = 0
                     LEFT JOIN 
-                        ""EventArrival"" ea ON ee.""IdPath"" = ea.""IdPath"" 
+                        ""EventArrival"" ea ON ee.""IdPath"" = ea.""IdPath"" AND ee.""Time"" = ea.""Time"" 
                     LEFT JOIN 
-                        ""EventDeparture"" ed ON ee.""IdPath"" = ed.""IdPath""
+                        ""EventDeparture"" ed ON ee.""IdPath"" = ed.""IdPath"" AND ee.""Time"" = ed.""Time""
                     WHERE 
                         ed.""Time"" BETWEEN @StartDate AND @EndDate
                     AND 
@@ -60,6 +64,11 @@ namespace WagonService.Server.Services
 
                 return response;
             }
+        }
+
+        private bool IsValidTimeFormat(string time, out DateTime dateTime)
+        {
+            return DateTime.TryParse(time, out dateTime);
         }
     }
 }
