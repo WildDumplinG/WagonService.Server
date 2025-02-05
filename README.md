@@ -67,7 +67,7 @@ docker run -dt `
   -v "${env:USERPROFILE}\.aspnet\https:/https/" `
   -p 5000:5000 `
   -p 5001:5001 `
-  --name <Имя image>
+  --name <Имя image> `
   <Имя контейнера>
 ```
 Порты должны соответствовать AppSettings
