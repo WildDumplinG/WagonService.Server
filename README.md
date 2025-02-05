@@ -28,5 +28,30 @@
 # Запуск сервера
 dotnet run --project Server
 
+# Запуск через Docker-Compose
+1. Настройка docker-compose.yml
+```bash
+ports:
+  - "5000:5000"
+  - "5001:5001"
+Указываем порты согласно appsettings
+ POSTGRES_USER: ${POSTGRES_USER:-postgres}
+ POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+Настройка дефолтного пользователя БД
+- /d/Works/Interviews/Company/NIIAS/Tests/scheduler.backup:/docker-entrypoint-initdb.d/scheduler.backup
+Путь до бэкапа
+```
+2. Создание бд
+```bash
+Запуск аркестратора из корня проекта
+docker-compose up -d
+Подключение к серверу postgreSQL
+docker exec -it <ключ контейнера> psql -U <имя пользователя>
+CREATE DATABASE <имя БД>;
+\q
+```
+3. Подгрузка бэкапа
+docker exec <ключ контейнера> pg_restore -U <имя пользователя> -d <имя бд> /docker-entrypoint-initdb.d/scheduler.backup
+
 Релизы моно скачать по пути
 [https://github.com/WildDumplinG/WagonService.Server/releases]
