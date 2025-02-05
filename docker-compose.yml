@@ -1,0 +1,35 @@
+version: '3.4'
+
+services:
+  server:
+    image: ${DOCKER_REGISTRY-}server
+    build:
+      context: .
+      dockerfile: Server/Dockerfile
+    links:
+      - posgreSQL
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+    environment:
+      - env=DockerCompose
+
+  posgreSQL:
+      image: "postgres:16.3"
+      restart: always
+      build:
+        context: .
+        dockerfile: Docker/DockerfilePostgreSQL
+      environment:
+           POSTGRES_USER: ${POSTGRES_USER:-postgres}
+           POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+           PGDATA: /data/postgres
+      ports:
+          - "5432:5432"
+      volumes:
+          - stackup_postgres_data:/var/lib/postgresql/data/
+          - /d/Works/Interviews/Company/NIIAS/Tests/scheduler.backup:/docker-entrypoint-initdb.d/scheduler.backup
+
+volumes:
+  stackup_postgres_data:
+  pgadmin-data:

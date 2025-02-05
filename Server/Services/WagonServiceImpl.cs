@@ -30,7 +30,14 @@ namespace WagonService.Server.Services
 
             using (IDbConnection dbConnection = new NpgsqlConnection(_settings.Value.Connection))
             {
-                dbConnection.Open();
+                try
+                {
+                    dbConnection.Open();
+                }
+                catch (Exception ex)
+                { 
+                }
+                
 
                 string sqlQuery = @"
                     SELECT 
