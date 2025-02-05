@@ -53,24 +53,5 @@ CREATE DATABASE <имя БД>;
 3. Подгрузка бэкапа
 docker exec <ключ контейнера> pg_restore -U <имя пользователя> -d <имя бд> /docker-entrypoint-initdb.d/scheduler.backup
 
-# Запуск через Docker
-1. Билд
-```bash
-docker build -f Server\Dockerfile --force-rm -t <Имя image> .
-```
-2. Запуск
-```bash
-docker run -dt `
-  -e ASPNETCORE_ENVIRONMENT=Development `
-  -e ASPNETCORE_Kestrel__Certificates__Default__Password="<CREDENTIAL_PLACEHOLDER>" `
-  -e ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx `
-  -v "${env:USERPROFILE}\.aspnet\https:/https/" `
-  -p 5000:5000 `
-  -p 5001:5001 `
-  --name <Имя контейнера> `
-  <Имя image>
-```
-Порты должны соответствовать AppSettings
-
 Релизы можно скачать по пути
 [https://github.com/WildDumplinG/WagonService.Server/releases]
