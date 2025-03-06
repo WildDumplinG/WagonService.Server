@@ -8,7 +8,7 @@ using Server.Services.Settings;
 
 namespace WagonService.Server.Services
 {
-    public class WagonServiceImpl(IOptions<WagonServiceImplSettings> options) : WagonService.WagonServiceBase
+    public class WagonServiceImpl(IOptions<WagonServiceImplSettings> options, ILogger<WagonServiceImpl> logger) : WagonService.WagonServiceBase
     {
         #region Settings
 
@@ -20,11 +20,15 @@ namespace WagonService.Server.Services
         {
             if (!IsValidTimeFormat(request.StartTime, out var startTime) || !IsValidTimeFormat(request.EndTime, out var endTime))
             {
-                throw new RpcException(new Status(StatusCode.InvalidArgument, "Неверный формат времени."));
+                var ex = "Неверный формат времени.";
+                logger.LogWarning(ex, "WagonServer");
+                throw new RpcException(new Status(StatusCode.InvalidArgument, ex));
             }
 
             if (startTime >= endTime)
             {
+                var ex = "Start time должно быть меньше End time.";
+                logger.LogWarning(ex, "WagonServer");
                 throw new RpcException(new Status(StatusCode.InvalidArgument, "Start time должно быть меньше End time."));
             }
 

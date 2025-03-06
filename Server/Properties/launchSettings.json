@@ -8,24 +8,23 @@
       },
       "sslPort": 7169
     },
-    "https": {
+    "http": {
       "commandName": "Project",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "https://localhost:7169;http://localhost:5000",
-      "sslPort": 7169
+      "applicationUrl": "http://localhost:5000" // Устанавливаем только HTTP
+      // Убираем sslPort, поскольку он не нужен
     },
     "Container (Dockerfile)": {
       "commandName": "Docker",
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
       "environmentVariables": {
-        "ASPNETCORE_HTTPS_PORTS": "5001",
-        "ASPNETCORE_HTTP_PORTS": "5000"
+        "ASPNETCORE_HTTP_PORTS": "5000" // Оставляем только HTTP
       },
       "publishAllPorts": true,
-      "useSSL": true
+      "useSSL": false // Убираем использование SSL
     }
   },
   "$schema": "https://json.schemastore.org/launchsettings.json",

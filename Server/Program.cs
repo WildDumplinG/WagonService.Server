@@ -2,6 +2,9 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 using Server.Services.Settings;
 using WagonService.Server.Services;
+using Serilog;
+using Serilog.Sinks.Loki;
+using OpenTelemetry.Resources;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,18 +27,47 @@ if (type != null)
     }
 }
 
+#region Logger
+
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Http("http://localhost:3100/loki/api/v1/push")
+    .WriteTo.LokiHttp("http://localhost:3100")
+    .CreateLogger();
+
+
+Log.ForContext("job", "app")
+   .Information("Starting up the web API.");
+
+builder.Services.AddLogging(loggingBuilder =>
+{
+    loggingBuilder.ClearProviders();
+    loggingBuilder.AddSerilog();
+});
+
+#endregion
+
 builder.Services.AddOpenTelemetry()
     .WithTracing(tracingBuilder =>
     {
         tracingBuilder
             .AddAspNetCoreInstrumentation()
-            .AddConsoleExporter();
+            .AddConsoleExporter()
+            .AddJaegerExporter(options =>
+            {
+                options.AgentHost = "localhost";
+                options.AgentPort = 6831;
+            })
+            .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("Jaeger:WagonServer"));
     })
     .WithMetrics(metricsBuilder =>
     {
         metricsBuilder
             .AddAspNetCoreInstrumentation()
-            .AddConsoleExporter();
+            .AddConsoleExporter()
+            .AddPrometheusExporter(options => 
+            { 
+                
+            });
     });
 
 #region Config
