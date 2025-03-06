@@ -53,5 +53,5 @@ CREATE DATABASE <имя БД>;
 3. Подгрузка бэкапа
 docker exec <ключ контейнера> pg_restore -U <имя пользователя> -d <имя бд> /docker-entrypoint-initdb.d/scheduler.backup
 
-Релизы моно скачать по пути
+Релизы можно скачать по пути
 [https://github.com/WildDumplinG/WagonService.Server/releases]
